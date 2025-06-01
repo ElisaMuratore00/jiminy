@@ -1,0 +1,24 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.detectIndentation": false,
+  "editor.foldingImportsByDefault": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "eslint.rules.customizations": [
+    { "rule": "no-console", "severity": "off" },
+    { "rule": "@typescript-eslint/no-unused-vars", "severity": "info" },
+    { "rule": "prettier/prettier", "severity": "off" }
+  ],
+  "files.readonlyInclude": {
+    "pnpm-lock.yaml": true
+  },
+  "search.exclude": {
+    "pnpm-lock.yaml": true
+  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

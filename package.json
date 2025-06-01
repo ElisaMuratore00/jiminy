@@ -1,0 +1,55 @@
+{
+  "name": "jiminy",
+  "title": "Jiminy",
+  "version": "0.0.0",
+  "description": "A Browser Extension for detecting disinformation while using online social medias",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "postinstall": "wxt prepare",
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "compile": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@webext-core/messaging": "^2.3.0",
+    "class-variance-authority": "^0.7.1",
+    "preact": "^10.26.9",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/js": "^9.28.0",
+    "@preact/preset-vite": "^2.10.2",
+    "@tailwindcss/vite": "^4.1.11",
+    "eslint": "^9.28.0",
+    "eslint-plugin-import": "^2.31.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.1",
+    "prettier": "3.5.3",
+    "prettier-plugin-tailwindcss": "0.6.12",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.0",
+    "wxt": "^0.20.7"
+  },
+  "packageManager": "pnpm@10.8.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write --ignore-unknown",
+      "eslint --report-unused-disable-directives --no-warn-ignored --max-warnings 0 --no-error-on-unmatched-pattern"
+    ],
+    "*.{css,md,yml}": [
+      "prettier --write --ignore-unknown"
+    ]
+  }
+}

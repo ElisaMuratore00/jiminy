@@ -1,0 +1,48 @@
+name: Build
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+concurrency:
+  group: build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify version and tag
+        run: |
+          APP_VERSION=$(npm pkg get version | tr -d '"{} ')
+          if [ "$APP_VERSION" != "${GITHUB_REF#refs/tags/}" ]; then
+            echo "Version mismatch: $APP_VERSION != ${GITHUB_REF#refs/tags/}"
+            exit 1
+          fi
+
+      - name: Build
+        run: |
+          pnpm run zip
+          pnpm run zip:firefox
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: dist/*.zip
+          if-no-files-found: error
+          include-hidden-files: true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
