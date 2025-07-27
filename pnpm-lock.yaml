@@ -11,6 +11,9 @@ importers:
       '@webext-core/messaging':
         specifier: ^2.3.0
         version: 2.3.0
+      async-mutex:
+        specifier: ^0.5.0
+        version: 0.5.0
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

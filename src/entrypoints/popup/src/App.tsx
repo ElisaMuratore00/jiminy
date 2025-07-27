@@ -1,29 +1,35 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import { title } from '../../../../package.json';
+import { Button } from '../../../components/button';
 import { Card } from '../../../components/card';
+import type { Stats } from '../../../types/entities';
 import logger from '../../../utils/logger';
-import { viewedPostsStorage } from '../../../utils/storage';
+import { sendMessage } from '../../../utils/messaging';
+import { statsPostsStorage } from '../../../utils/storage';
 
 function App() {
   // States
-  const [count, setCount] = useState(0);
+  const [stats, setStats] = useState<Stats>();
+
+  // Callbacks
+  const handleReset = useCallback(() => sendMessage('RESET'), []);
 
   // Effects
   useEffect(() => {
     logger.info('App mounted');
 
-    viewedPostsStorage.getValue().then(posts => {
-      logger.info('Posts loaded', { count: posts.length });
-      setCount(posts.length);
+    statsPostsStorage.getValue().then(_stats => {
+      logger.debug('Stats loaded', _stats);
+      setStats(_stats);
     });
 
-    const unwatch = viewedPostsStorage.watch(posts => {
-      logger.info('Posts updated', { count: posts.length });
-      setCount(posts.length);
+    const unwatchStats = statsPostsStorage.watch(stats => {
+      logger.debug('Stats updated', stats);
+      setStats(stats);
     });
 
     return () => {
-      unwatch();
+      unwatchStats();
     };
   }, []);
 
@@ -50,7 +56,7 @@ function App() {
           <h1 className='text-2xl font-bold text-indigo-700'>{title}</h1>
         </div>
       </header>
-      <main>
+      <main className='flex flex-col gap-4'>
         <Card>
           <div className='flex items-start justify-between'>
             <div>
@@ -58,10 +64,45 @@ function App() {
               <p className='mb-4 text-sm text-gray-500'>Total number of viewed posts</p>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {count}
+              {stats?.totalPosts}
             </span>
           </div>
         </Card>
+        <Card>
+          <div className='flex items-start justify-between'>
+            <div>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Verified posts</h2>
+              <p className='mb-4 text-sm text-gray-500'>Total number of verified posts</p>
+            </div>
+            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
+              {stats?.verifiedPosts}
+            </span>
+          </div>
+        </Card>
+        <Card>
+          <div className='flex items-start justify-between'>
+            <div>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk posts</h2>
+              <p className='mb-4 text-sm text-gray-500'>Total number of Musk posts</p>
+            </div>
+            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
+              {stats?.muskPosts}
+            </span>
+          </div>
+        </Card>
+        <Card>
+          <div className='flex items-start justify-between'>
+            <div>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
+            </div>
+            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
+              {stats?.infodemicRiskIndex.toFixed(2)}
+            </span>
+          </div>
+        </Card>
+        <Button variant='secondary' className='w-full' onClick={handleReset}>
+          Reset
+        </Button>
       </main>
     </div>
   );

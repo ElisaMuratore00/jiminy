@@ -1,17 +1,16 @@
-import type { Post } from '../types/entities';
+import { POST_SELECTOR } from '../config/constants';
+import type { Media, Post } from '../types/entities';
 import logger from '../utils/logger';
-import { sendMessage } from '../utils/messaging';
-import { hashCode } from '../utils/utils';
+import { onMessage, sendMessage } from '../utils/messaging';
+import { hashCode, parseCount } from '../utils/utils';
 import { defineContentScript } from '#imports';
-
-const POST_SELECTOR = '[data-testid="tweet"]';
-
-const observedPosts = new Set<string>();
 
 export default defineContentScript({
   matches: ['*://*.x.com/*'],
   main: async ctx => {
     logger.info('Content started');
+
+    const observedPosts = new Set<string>();
 
     const intersectionObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -24,22 +23,70 @@ export default defineContentScript({
           if (observedPosts.has(id)) return;
           observedPosts.add(id);
 
-          const text = target.querySelector('[data-testid="tweetText"]')?.textContent ?? '';
+          const text = target.querySelector('[data-testid="tweetText"]')?.textContent?.trim() ?? '';
           const username =
-            target.querySelector('[data-testid="User-Name"] a[role="link"] span')?.textContent ??
-            '';
+            target
+              .querySelector('[data-testid="User-Name"] a[role="link"]')
+              ?.getAttribute('href')
+              ?.trim()
+              .replace(/^\//, '') ?? '';
           const datetime =
             target
               .querySelector('[data-testid="User-Name"] a[role="link"] time')
               ?.getAttribute('datetime') ?? '';
+          const createdAt = new Date(datetime).getTime();
 
-          const timestamp = new Date(datetime).getTime();
+          const verified = target.querySelector('[data-testid="icon-verified"]') !== null;
+          const likes = parseCount(
+            target.querySelector('[data-testid="like"]')?.textContent?.trim() ?? '',
+          );
+          const comments = parseCount(
+            target.querySelector('[data-testid="reply"]')?.textContent?.trim() ?? '',
+          );
+          const reposts = parseCount(
+            target.querySelector('[data-testid="retweet"]')?.textContent?.trim() ?? '',
+          );
+          const views = parseCount(
+            target.querySelector('a[href$="/analytics"]')?.textContent?.trim() ?? '',
+          );
+
+          const images = Array.from(
+            target.querySelectorAll('[data-testid="tweetPhoto"] img[src]'),
+          ).map(
+            element =>
+              ({
+                type: 'image',
+                url: element.getAttribute('src') ?? undefined,
+                description: element.getAttribute('alt') ?? undefined,
+              }) satisfies Media,
+          );
+          const videos = Array.from(
+            target.querySelectorAll('[data-testid="tweetPhoto"] video'),
+          ).map(
+            () =>
+              ({
+                type: 'video',
+              }) satisfies Media,
+          );
+
+          const urls = Array.from(text.matchAll(/https?:\/\/[^\s]+/g)).map(([url]) => url);
+          const mentions = Array.from(text.matchAll(/@[^\s]+/g)).map(([mention]) => mention);
+          const hashtags = Array.from(text.matchAll(/#[^\s]+/g)).map(([hashtag]) => hashtag);
 
           const post: Post = {
-            id: id,
-            text,
+            id,
             username,
-            createdAt: timestamp,
+            text,
+            verified,
+            likes,
+            comments,
+            reposts,
+            views,
+            media: [...images, ...videos],
+            urls,
+            mentions,
+            hashtags,
+            createdAt,
           };
           logger.debug('New post visible:', post);
           sendMessage('POST_VIEWED', post);
@@ -79,17 +126,35 @@ export default defineContentScript({
     function processNewPost(post: Element) {
       const postId = getPostId(post);
 
+      // Click "Show more" to show all post text
+      post
+        .querySelector('button[data-testid="tweet-text-show-more-link"')
+        //@ts-expect-error this can exist
+        ?.click?.();
+
       logger.debug('New post detected:', { postId });
       intersectionObserver.observe(post);
     }
 
-    document.querySelectorAll(POST_SELECTOR).forEach(post => {
-      processNewPost(post);
+    function main() {
+      // Get posts already in the DOM
+      document.querySelectorAll(POST_SELECTOR).forEach(post => {
+        processNewPost(post);
+      });
+    }
+
+    const unregisterReset = onMessage('RESET', () => {
+      logger.info('Content reset');
+      observedPosts.clear();
+
+      main();
     });
 
+    // Invalidate
     ctx.onInvalidated(() => {
       mutationObserver.disconnect();
       intersectionObserver.disconnect();
+      unregisterReset();
 
       logger.debug('Content invalidated');
     });
