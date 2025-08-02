@@ -75,7 +75,7 @@ function App() {
               <p className='mb-4 text-sm text-gray-500'>Total number of verified posts</p>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.verifiedPosts}
+              {stats?.totalVerifiedPosts}
             </span>
           </div>
         </Card>
@@ -86,7 +86,7 @@ function App() {
               <p className='mb-4 text-sm text-gray-500'>Total number of Musk posts</p>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.muskPosts}
+              {stats?.totalMuskPosts}
             </span>
           </div>
         </Card>
@@ -96,7 +96,7 @@ function App() {
               <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.infodemicRiskIndex.toFixed(2)}
+              {stats?.totalInfodemicRiskIndex.toFixed(2)}
             </span>
           </div>
         </Card>

@@ -37,10 +37,10 @@ export const updateStats = (data: Post) =>
     stats.totalPosts += 1;
 
     // update `verified` property mean
-    if (data.verified) stats.verifiedPosts += 1;
+    if (data.verified) stats.totalVerifiedPosts += 1;
 
     // update `IRI` using URL realiability and views count
-    if (data.urls && data.urls.length > 0) {
+    if (data.urls.length > 0) {
       let ignoredUrls = 0;
       const reliability = data.urls.reduce((acc, current) => {
         const r = urlReliability(current);
@@ -55,17 +55,18 @@ export const updateStats = (data: Post) =>
         const views = data.views ?? 0;
         const reliabilityAverage = reliability / (data.urls.length - ignoredUrls);
 
-        const numerator = stats.infodemicRiskIndex * stats.totalViews + reliabilityAverage * views;
+        const numerator =
+          stats.totalInfodemicRiskIndex * stats.totalViews + reliabilityAverage * views;
 
         // update `views`
         stats.totalViews += views;
         // update `IRI`
-        stats.infodemicRiskIndex = numerator / stats.totalViews;
+        stats.totalInfodemicRiskIndex = numerator / stats.totalViews;
       }
     }
 
     // update `Musk` posts counter
-    if (isMuskPost(data.username)) stats.muskPosts += 1;
+    if (isMuskPost(data.username)) stats.totalMuskPosts += 1;
 
     await statsPostsStorage.setValue(stats);
   });

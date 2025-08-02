@@ -3,15 +3,16 @@ export type Post = {
   username: string;
   text: string;
   verified: boolean;
-  likes?: number;
-  comments?: number;
-  reposts?: number;
-  views?: number;
-  media?: Media[];
-  urls?: string[];
-  mentions?: string[];
-  hashtags?: string[];
+  likes: number | undefined;
+  comments: number | undefined;
+  reposts: number | undefined;
+  views: number | undefined;
+  media: Media[];
+  urls: string[];
+  mentions: string[];
+  hashtags: string[];
   createdAt: number;
+  viewedAt: number;
 };
 
 export type Media =
@@ -26,9 +27,8 @@ export type Media =
 
 export type Stats = {
   totalPosts: number;
-  verifiedPosts: number;
-  muskPosts: number;
-  // IRI
-  infodemicRiskIndex: number;
+  totalVerifiedPosts: number;
+  totalMuskPosts: number;
+  totalInfodemicRiskIndex: number;
   totalViews: number;
 };
