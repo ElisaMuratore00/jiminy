@@ -14,3 +14,7 @@ export const statsPostsStorage = storage.defineItem<Stats>('local:statsPosts', {
     totalViews: 0,
   },
 });
+
+export const unshortenedUrlStorage = storage.defineItem<Record<string, string>>('local:urlCache', {
+  fallback: {},
+});

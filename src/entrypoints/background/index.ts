@@ -1,6 +1,6 @@
 import logger from '../../utils/logger';
 import { onMessage, sendMessage } from '../../utils/messaging';
-import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
+import { statsPostsStorage, unshortenedUrlStorage, viewedPostsStorage } from '../../utils/storage';
 import { downloadData, saveNewViewedPost } from './actions';
 import { browser, defineBackground } from '#imports';
 
@@ -14,6 +14,7 @@ export default defineBackground(() => {
   onMessage('RESET', async () => {
     await viewedPostsStorage.removeValue({ removeMeta: true });
     await statsPostsStorage.removeValue({ removeMeta: true });
+    await unshortenedUrlStorage.removeValue({ removeMeta: true });
 
     browser.tabs.query({}).then(tabs => {
       // Send reset message to all tabs

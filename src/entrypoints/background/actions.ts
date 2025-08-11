@@ -42,15 +42,19 @@ export const updateStats = (data: Post) =>
 
     // update `IRI` using URL realiability and views count
     if (data.urls.length > 0) {
-      let ignoredUrls = 0;
-      const reliability = data.urls.reduce((acc, current) => {
-        const r = urlReliability(current);
-        if (r === undefined) {
-          ignoredUrls += 1;
-          return acc;
+      const [reliability, ignoredUrls] = await (async () => {
+        let _result = 0;
+        let _ignoredUrls = 0;
+        for (const url of data.urls) {
+          const r = await urlReliability(url);
+          if (r === undefined) {
+            _ignoredUrls += 1;
+            continue;
+          }
+          _result += r;
         }
-        return acc + r;
-      }, 0);
+        return [_result, _ignoredUrls] as const;
+      })();
 
       if (ignoredUrls !== data.urls.length) {
         const views = data.views ?? 0;

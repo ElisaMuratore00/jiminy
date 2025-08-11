@@ -2,6 +2,7 @@ import { type ClassNameValue, twMerge } from 'tailwind-merge';
 import reliabilityList from '../assets/reliability-list.json';
 import { MUSK_USERNAME } from '../config/constants';
 import type { Post } from '../types/entities';
+import { unshortenUrl } from './url';
 
 export const cn = (...classLists: ClassNameValue[]) => twMerge(classLists);
 
@@ -30,7 +31,9 @@ export const parseCount = (str: string): number | undefined => {
 export const isMuskPost = (username: Post['username']): boolean =>
   username.toLowerCase().trim().replace(/^@/, '') === MUSK_USERNAME;
 
-export const urlReliability = (url: string): number | undefined => {
-  const hostname = new URL(url).hostname;
+export const urlReliability = async (url: string): Promise<number | undefined> => {
+  const unshortenedUrl = await unshortenUrl(url);
+
+  const hostname = new URL(unshortenedUrl).hostname;
   return reliabilityList[hostname as keyof typeof reliabilityList];
 };
