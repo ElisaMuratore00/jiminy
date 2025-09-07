@@ -177,6 +177,29 @@ export default defineContentScript({
       main();
     });
 
+    // Listen for download blob message
+    const unregisterDownloadBlob = onMessage('DOWNLOAD_BLOB', ({ data }) => {
+      logger.info('Content has received blob for download');
+      const { viewedPostsJSON } = data;
+
+      const blob = new Blob([viewedPostsJSON], { type: 'application/json' });
+
+      logger.info(`Blob size: ${blob.size} bytes`);
+      logger.info('Triggering download in content script');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'viewed_posts.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      logger.info('Download triggered');
+      logger.info('Revoking object URL');
+      URL.revokeObjectURL(url);
+
+      logger.info('Blob download process completed in content script');
+    });
+
     // Invalidate
     ctx.onInvalidated(() => {
       intersectionTimers.values().forEach(timerId => clearTimeout(timerId));
@@ -186,6 +209,7 @@ export default defineContentScript({
       intersectionObserver.disconnect();
       observedPosts.clear();
       unregisterReset();
+      unregisterDownloadBlob();
 
       logger.debug('Content invalidated');
     });

@@ -1,7 +1,7 @@
 import logger from '../../utils/logger';
 import { onMessage, sendMessage } from '../../utils/messaging';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
-import { saveNewViewedPost } from './actions';
+import { downloadData, saveNewViewedPost } from './actions';
 import { browser, defineBackground } from '#imports';
 
 export default defineBackground(() => {
@@ -20,5 +20,10 @@ export default defineBackground(() => {
       for (const tab of tabs)
         if (tab.id !== undefined) sendMessage('RESET', undefined, { tabId: tab.id });
     });
+  });
+
+  onMessage('DOWNLOAD', async () => {
+    logger.info('Data download initiated in background');
+    await downloadData();
   });
 });

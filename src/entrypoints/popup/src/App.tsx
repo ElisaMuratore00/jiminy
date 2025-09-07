@@ -13,6 +13,7 @@ function App() {
 
   // Callbacks
   const handleReset = useCallback(() => sendMessage('RESET'), []);
+  const handleDataDownload = useCallback(() => sendMessage('DOWNLOAD'), []);
 
   // Effects
   useEffect(() => {
@@ -102,6 +103,9 @@ function App() {
         </Card>
         <Button variant='secondary' className='w-full' onClick={handleReset}>
           Reset
+        </Button>
+        <Button variant='secondary' className='w-full' onClick={handleDataDownload}>
+          Download my data in JSON
         </Button>
       </main>
     </div>

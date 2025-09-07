@@ -34,6 +34,12 @@ pnpm install
 pnpm run dev
 ```
 
+or
+
+```bash
+pnpm dev
+```
+
 ### Loading the Extension
 
 #### Chrome/Edge:
