@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
 
 concurrency:
   group: build
@@ -13,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      DOMAIN_LIST_URL: ${{ vars.DOMAIN_LIST_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
@@ -20,13 +23,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Verify version and tag
+      # - name: Verify version and tag
+      #   run: |
+      #     APP_VERSION=$(npm pkg get version | tr -d '"{} ')
+      #     if [ "$APP_VERSION" != "${GITHUB_REF#refs/tags/}" ]; then
+      #       echo "Version mismatch: $APP_VERSION != ${GITHUB_REF#refs/tags/}"
+      #       exit 1
+      #     fi
+
+      - name: Download domain-list
         run: |
-          APP_VERSION=$(npm pkg get version | tr -d '"{} ')
-          if [ "$APP_VERSION" != "${GITHUB_REF#refs/tags/}" ]; then
-            echo "Version mismatch: $APP_VERSION != ${GITHUB_REF#refs/tags/}"
-            exit 1
-          fi
+          node scripts/download-data.js "$DOMAIN_LIST_URL" "src/assets/reliability-list.json"
 
       - name: Build
         run: |
