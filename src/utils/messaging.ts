@@ -5,6 +5,7 @@ import type { Post } from '../types/entities';
 interface ProtocolMap {
   POST_VIEWED: (post: Post) => void;
   RESET: () => void;
+  DOWNLOAD_DATA: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

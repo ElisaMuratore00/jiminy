@@ -7,7 +7,7 @@ import { title } from './package.json';
 export default defineConfig({
   manifest: {
     name: title,
-    permissions: ['storage'],
+    permissions: ['storage', 'downloads'],
   },
   srcDir: 'src',
   outDir: 'dist',

@@ -3,6 +3,7 @@ import type { Post, Stats } from '../../types/entities';
 import logger from '../../utils/logger';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
 import { isMuskPost, urlReliability } from '../../utils/utils';
+import { browser } from '#imports';
 
 const saveViewedPostMutex = new Mutex();
 const updateStatsMutex = new Mutex();
@@ -70,3 +71,25 @@ export const updateStats = (data: Post) =>
 
     await statsPostsStorage.setValue(stats);
   });
+
+/**
+ * Download data as JSON file
+ */
+export const downloadData = async () => {
+  // Get viewed posts and convert to JSON
+  const viewedPosts = await viewedPostsStorage.getValue();
+
+  const json = JSON.stringify(viewedPosts);
+  browser.downloads
+    .download({
+      url: 'data:application/json;charset=utf-8,' + encodeURIComponent(json),
+      filename: 'viewed-posts.json',
+      conflictAction: 'uniquify',
+    })
+    .then(() => {
+      logger.info('Data download initiated');
+    })
+    .catch(error => {
+      logger.error('Error downloading data', { error });
+    });
+};
