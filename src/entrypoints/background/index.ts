@@ -22,8 +22,7 @@ export default defineBackground(() => {
     });
   });
 
-  onMessage('DOWNLOAD', async () => {
-    logger.info('Data download initiated in background');
+  onMessage('DOWNLOAD_DATA', async () => {
     await downloadData();
   });
 });

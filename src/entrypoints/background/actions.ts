@@ -1,33 +1,12 @@
 import { Mutex } from 'async-mutex';
 import type { Post, Stats } from '../../types/entities';
 import logger from '../../utils/logger';
-import { sendMessage } from '../../utils/messaging';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
 import { isMuskPost, urlReliability } from '../../utils/utils';
 import { browser } from '#imports';
 
 const saveViewedPostMutex = new Mutex();
 const updateStatsMutex = new Mutex();
-
-/**
- * Download data as JSON file
- */
-export const downloadData = async () => {
-  // Get viewed posts and convert to JSON
-  const viewedPosts = await viewedPostsStorage.getValue();
-  const viewedPostsJSON = JSON.stringify(viewedPosts, null, 2);
-  logger.info(`Preparing download of ${viewedPosts.length} viewed posts`);
-
-  // Send message to content script to trigger download
-  logger.info('Sending viewedPostsJSON to content script for download');
-  const tabId = (await browser.tabs.query({ active: true, currentWindow: true }))[0]?.id;
-  if (tabId === undefined) {
-    logger.error('No active tab found to send the blob for download');
-    return;
-  }
-  sendMessage('DOWNLOAD_BLOB', { viewedPostsJSON }, { tabId });
-  logger.info('viewedPostsJSON sent to content script');
-};
 
 /**
  * Save viewed post if new
@@ -92,3 +71,25 @@ export const updateStats = (data: Post) =>
 
     await statsPostsStorage.setValue(stats);
   });
+
+/**
+ * Download data as JSON file
+ */
+export const downloadData = async () => {
+  // Get viewed posts and convert to JSON
+  const viewedPosts = await viewedPostsStorage.getValue();
+
+  const json = JSON.stringify(viewedPosts);
+  browser.downloads
+    .download({
+      url: 'data:application/json;charset=utf-8,' + encodeURIComponent(json),
+      filename: 'viewed-posts.json',
+      conflictAction: 'uniquify',
+    })
+    .then(() => {
+      logger.info('Data download initiated');
+    })
+    .catch(error => {
+      logger.error('Error downloading data', { error });
+    });
+};
