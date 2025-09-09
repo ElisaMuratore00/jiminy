@@ -12,5 +12,6 @@ export const statsPostsStorage = storage.defineItem<Stats>('local:statsPosts', {
     totalMuskPosts: 0,
     totalInfodemicRiskIndex: 0,
     totalViews: 0,
+    totalTriggerWordPosts: 0,
   },
 });

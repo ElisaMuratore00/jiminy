@@ -2,7 +2,7 @@ import { Mutex } from 'async-mutex';
 import type { Post, Stats } from '../../types/entities';
 import logger from '../../utils/logger';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
-import { isMuskPost, urlReliability } from '../../utils/utils';
+import { isMuskPost, urlReliability , postContainsTriggerWord} from '../../utils/utils';
 import { browser } from '#imports';
 
 const saveViewedPostMutex = new Mutex();
@@ -68,6 +68,9 @@ export const updateStats = (data: Post) =>
 
     // update `Musk` posts counter
     if (isMuskPost(data.username)) stats.totalMuskPosts += 1;
+
+    // update `TriggerWord` posts counter
+    if (postContainsTriggerWord(data.text)) stats.totalTriggerWordPosts += 1;
 
     await statsPostsStorage.setValue(stats);
   });

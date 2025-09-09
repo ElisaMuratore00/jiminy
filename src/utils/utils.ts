@@ -2,6 +2,7 @@ import { type ClassNameValue, twMerge } from 'tailwind-merge';
 import reliabilityList from '../assets/reliability-list.json';
 import { MUSK_USERNAME } from '../config/constants';
 import type { Post } from '../types/entities';
+import { TRIGGER_WORD } from '../config/constants';
 
 export const cn = (...classLists: ClassNameValue[]) => twMerge(classLists);
 
@@ -34,3 +35,9 @@ export const urlReliability = (url: string): number | undefined => {
   const hostname = new URL(url).hostname;
   return reliabilityList[hostname as keyof typeof reliabilityList];
 };
+
+export const postContainsTriggerWord = (post: Post['text']): boolean => {
+  const content = post.toLowerCase();
+  const triggerWord = TRIGGER_WORD.toLowerCase();
+  return content.includes(triggerWord);
+}
