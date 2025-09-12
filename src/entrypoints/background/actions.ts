@@ -57,7 +57,7 @@ export const updateStats = (data: Post) =>
         const reliabilityAverage = reliability / (data.urls.length - ignoredUrls);
 
         const numerator =
-          stats.totalInfodemicRiskIndex * stats.totalViews + reliabilityAverage * views;
+          stats.totalInfodemicRiskIndex * stats.totalViews + (1 - reliabilityAverage) * views;
 
         // update `views`
         stats.totalViews += views;
