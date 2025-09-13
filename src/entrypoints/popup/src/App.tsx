@@ -7,6 +7,7 @@ import logger from '../../../utils/logger';
 import { sendMessage } from '../../../utils/messaging';
 import { statsPostsStorage } from '../../../utils/storage';
 
+
 function App() {
   // States
   const [stats, setStats] = useState<Stats>();
@@ -14,6 +15,7 @@ function App() {
   // Callbacks
   const handleReset = useCallback(() => sendMessage('RESET'), []);
   const handleDataDownload = useCallback(() => sendMessage('DOWNLOAD_DATA'), []);
+  // const selectTriggerWord = useCallback(() => sendMessage('SELECT_TRIGGER'), []);
 
   // Effects
   useEffect(() => {
@@ -94,6 +96,17 @@ function App() {
         <Card>
           <div className='flex items-start justify-between'>
             <div>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Trigger posts</h2>
+              <p className='mb-4 text-sm text-gray-500'>Total number of trigger posts</p>
+            </div>
+            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
+              {stats?.totalTriggerWordPosts}
+            </span>
+          </div>
+        </Card>
+        <Card>
+          <div className='flex items-start justify-between'>
+            <div>
               <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
@@ -106,6 +119,9 @@ function App() {
         </Button>
         <Button variant='secondary' className='w-full' onClick={handleReset}>
           Reset
+        </Button>
+        <Button variant='secondary' className='w-full' onClick={selectTriggerWord}>
+          Trigger word
         </Button>
       </main>
     </div>
