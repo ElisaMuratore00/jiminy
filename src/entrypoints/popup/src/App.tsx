@@ -97,7 +97,7 @@ function App() {
               <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.totalInfodemicRiskIndex.toFixed(2)}
+              {stats && stats.totalViews === 0 ? 'N.A.' : stats?.totalInfodemicRiskIndex.toFixed(2)}
             </span>
           </div>
         </Card>
