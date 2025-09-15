@@ -53,7 +53,7 @@ export const updateStats = (data: Post) =>
       }, 0);
 
       if (ignoredUrls !== data.urls.length) {
-        const views = data.views ?? 0;
+        const views = data.views ?? data.likes ?? 0;
         const reliabilityAverage = reliability / (data.urls.length - ignoredUrls);
 
         const numerator =
