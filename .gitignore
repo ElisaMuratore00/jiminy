@@ -34,4 +34,4 @@ lerna-debug.log*
 !.env.sample
 
 # Dataset
-reliability-list.json
+reliability-list*.json
