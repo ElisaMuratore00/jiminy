@@ -25,4 +25,20 @@ export default defineBackground(() => {
   onMessage('DOWNLOAD_DATA', async () => {
     await downloadData();
   });
+
+  onMessage('CHANGE_TRIGGERWORD', async ({ data }) => {
+    await viewedPostsStorage.removeValue({ removeMeta: true });
+    await statsPostsStorage.removeValue({ removeMeta: true });
+
+    browser.tabs.query({}).then(tabs => {
+      // Send reset message to all tabs
+      for (const tab of tabs)
+        if (tab.id !== undefined) sendMessage('RESET', undefined, { tabId: tab.id });
+    });
+
+    // Set new trigger word in statsPostsStorage
+    const stats = await statsPostsStorage.getValue();
+    stats.triggerWord = data.triggerWord;
+    await statsPostsStorage.setValue(stats);
+  });
 });

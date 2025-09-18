@@ -2,7 +2,7 @@ import { Mutex } from 'async-mutex';
 import type { Post, Stats } from '../../types/entities';
 import logger from '../../utils/logger';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
-import { isMuskPost, urlReliability } from '../../utils/utils';
+import { containsTriggerWord, isMuskPost, urlReliability } from '../../utils/utils';
 import { browser } from '#imports';
 
 const saveViewedPostMutex = new Mutex();
@@ -40,7 +40,7 @@ export const updateStats = (data: Post) =>
     // update `verified` property mean
     if (data.verified) stats.totalVerifiedPosts += 1;
 
-    // update `IRI` using URL realiability and views count
+    // update `IRI` using URL reliability and views count
     if (data.urls.length > 0) {
       let ignoredUrls = 0;
       const reliability = data.urls.reduce((acc, current) => {
@@ -68,6 +68,10 @@ export const updateStats = (data: Post) =>
 
     // update `Musk` posts counter
     if (isMuskPost(data.username)) stats.totalMuskPosts += 1;
+
+    // update `trigger word` posts counter
+    if (containsTriggerWord(data.text, originalStats.triggerWord))
+      stats.totalTriggeredWordPosts += 1;
 
     await statsPostsStorage.setValue(stats);
   });
