@@ -7,6 +7,7 @@ import { browser } from '#imports';
 
 const saveViewedPostMutex = new Mutex();
 const updateStatsMutex = new Mutex();
+const updateTriggerWord = new Mutex();
 
 /**
  * Save viewed post if new
@@ -97,3 +98,20 @@ export const downloadData = async () => {
       logger.error('Error downloading data', { error });
     });
 };
+
+export const updateTriggerWordCounter = (data: Stats) =>
+  updateTriggerWord.runExclusive(async () => {
+    const stats = await statsPostsStorage.getValue();
+    const viewedPosts = await viewedPostsStorage.getValue();
+
+    // Set new trigger word in statsPostsStorage
+    const triggerWord: string = data.triggerWord;
+    const newTriggeredWordCount: number = viewedPosts.filter(post =>
+      containsTriggerWord(post.text, triggerWord),
+    ).length;
+
+    // Update stats
+    stats.triggerWord = triggerWord;
+    stats.totalTriggeredWordPosts = newTriggeredWordCount;
+    await statsPostsStorage.setValue(stats);
+  });

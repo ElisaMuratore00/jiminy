@@ -145,7 +145,7 @@ function App() {
             className='w-full'
             onClick={handleSetTriggerWordAndReset}
             disabled={!newTriggerWord.trim()}>
-            Set a new trigger word and reset data
+            Set a new trigger word
           </Button>
         </div>
       </main>
