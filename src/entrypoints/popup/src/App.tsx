@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import { title } from '../../../../package.json';
 import { Button } from '../../../components/button';
 import { Card } from '../../../components/card';
+import { Input } from '../../../components/input';
 import type { Stats } from '../../../types/entities';
 import logger from '../../../utils/logger';
 import { sendMessage } from '../../../utils/messaging';
@@ -10,10 +11,18 @@ import { statsPostsStorage } from '../../../utils/storage';
 function App() {
   // States
   const [stats, setStats] = useState<Stats>();
+  const [newTriggerWord, setNewTriggerWord] = useState('');
 
   // Callbacks
   const handleReset = useCallback(() => sendMessage('RESET'), []);
   const handleDataDownload = useCallback(() => sendMessage('DOWNLOAD_DATA'), []);
+
+  // Invia solo il messaggio CHANGE_TRIGGERWORD con la nuova parola
+  const handleSetTriggerWordAndReset = useCallback(() => {
+    if (!newTriggerWord.trim()) return;
+    sendMessage('CHANGE_TRIGGERWORD', { triggerWord: newTriggerWord.trim() });
+    setNewTriggerWord('');
+  }, [newTriggerWord]);
 
   // Effects
   useEffect(() => {
@@ -94,6 +103,20 @@ function App() {
         <Card>
           <div className='flex items-start justify-between'>
             <div>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>
+                Posts with{' '}
+                <span className='font-bold text-gray-700 italic'>"{stats?.triggerWord}"</span>
+              </h2>
+              <p className='mb-4 text-sm text-gray-500'>Posts containing the trigger word</p>
+            </div>
+            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
+              {stats?.totalTriggeredWordPosts}
+            </span>
+          </div>
+        </Card>
+        <Card>
+          <div className='flex items-start justify-between'>
+            <div>
               <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
@@ -107,6 +130,24 @@ function App() {
         <Button variant='secondary' className='w-full' onClick={handleReset}>
           Reset
         </Button>
+        {}
+        <div className='mt-2 flex flex-col gap-2'>
+          <Input
+            variant='primary'
+            className='w-full'
+            type='text'
+            placeholder='Insert new trigger word'
+            value={newTriggerWord}
+            onInput={e => setNewTriggerWord((e.target as HTMLInputElement).value)}
+          />
+          <Button
+            variant='primary'
+            className='w-full'
+            onClick={handleSetTriggerWordAndReset}
+            disabled={!newTriggerWord.trim()}>
+            Set a new trigger word
+          </Button>
+        </div>
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 import logger from '../../utils/logger';
 import { onMessage, sendMessage } from '../../utils/messaging';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
-import { downloadData, saveNewViewedPost } from './actions';
+import { downloadData, saveNewViewedPost, updateTriggerWordCounter } from './actions';
 import { browser, defineBackground } from '#imports';
 
 export default defineBackground(() => {
@@ -24,5 +24,9 @@ export default defineBackground(() => {
 
   onMessage('DOWNLOAD_DATA', async () => {
     await downloadData();
+  });
+
+  onMessage('CHANGE_TRIGGERWORD', async ({ data }) => {
+    await updateTriggerWordCounter(data);
   });
 });
