@@ -1,5 +1,5 @@
 import { cva } from 'class-variance-authority';
-import type { ButtonHTMLAttributes, InputHTMLAttributes } from 'preact/compat';
+import type { ButtonHTMLAttributes } from 'preact/compat';
 
 const buttonVariants = cva('flex-1 rounded-lg px-4 py-2 font-medium shadow transition-colors', {
   variants: {
@@ -22,16 +22,4 @@ export const Button = ({
   <button className={buttonVariants({ variant, className })} {...props}>
     {children}
   </button>
-);
-
-// Input component with same styles as Button
-export const Input = ({
-  variant,
-  className,
-  ...props
-}: InputHTMLAttributes & { variant?: 'primary' | 'secondary' }) => (
-  <input
-    className={buttonVariants({ variant, className }) + ' text-center placeholder:text-center'}
-    {...props}
-  />
 );

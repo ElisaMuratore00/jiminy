@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { title } from '../../../../package.json';
-import { Button, Input } from '../../../components/button';
+import { Button } from '../../../components/button';
 import { Card } from '../../../components/card';
+import { Input } from '../../../components/input';
 import type { Stats } from '../../../types/entities';
 import logger from '../../../utils/logger';
 import { sendMessage } from '../../../utils/messaging';
@@ -129,7 +130,7 @@ function App() {
         <Button variant='secondary' className='w-full' onClick={handleReset}>
           Reset
         </Button>
-        {/* Input e pulsante per nuova trigger word */}
+        {}
         <div className='mt-2 flex flex-col gap-2'>
           <Input
             variant='primary'
