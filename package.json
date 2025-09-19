@@ -1,7 +1,7 @@
 {
   "name": "jiminy",
   "title": "Jiminy",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A Browser Extension for detecting disinformation while using online social medias",
   "type": "module",
   "private": true,
