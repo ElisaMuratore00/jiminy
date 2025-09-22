@@ -112,28 +112,37 @@ function App() {
             </span>
           </div>
         </Card>
-        <Button variant='secondary' className='w-full' onClick={handleDataDownload}>
-          Download my data in JSON
-        </Button>
-        <Button variant='primary' className='w-full' onClick={handleReset}>
-          Reset
-        </Button>
-        <hr className='my-2 border-4 border-t border-indigo-800' />
         <Card>
           <div>
             <h2 className='mb-2 text-center text-lg font-semibold text-gray-700'>
-              Trigger words statistics
+              Trigger words' statistics
             </h2>
           </div>
           <div className='my-2' />
-          <p className='mb-4 text-center text-sm text-gray-500'>
-            Track how many posts contain your trigger words.{' '}
+          <p className='mb-6 text-center text-sm text-gray-500'>
+            Track posts containing your trigger words{' '}
           </p>
+          {stats &&
+            Object.entries(stats.triggerWordCounters).map(([word, count]) => (
+              <div className='flex items-start justify-between'>
+                <div>
+                  <h2 className='mb-4 text-lg font-medium text-gray-700'>
+                    {' '}
+                    <span className='font-medium text-gray-700'>"{word.toUpperCase()}"</span>
+                  </h2>
+                </div>
+                <span className='flex h-8 w-8 items-center justify-center rounded-full bg-indigo-800 font-bold text-white'>
+                  {count}
+                </span>
+              </div>
+            ))}
+          <div className='my-4' />
+          {}
           <Input
             variant='secondary'
             className='w-full'
             type='text'
-            placeholder='Insert new trigger word'
+            placeholder='Insert a new trigger word'
             value={newTriggerWord}
             onInput={e => setNewTriggerWord((e.target as HTMLInputElement).value)}
           />
@@ -143,28 +152,18 @@ function App() {
             className='w-full'
             onClick={handleSetTriggerWordAndReset}
             disabled={!newTriggerWord.trim()}>
-            Set a new trigger word
+            Add the inserted trigger word
+          </Button>
+          <div className='my-2' />
+          <Button variant='third' className='w-full' onClick={handleTriggerWordReset}>
+            Delete all trigger words
           </Button>
         </Card>
-        {stats &&
-          Object.entries(stats.triggerWordCounters).map(([word, count]) => (
-            <Card variant='secondary' key={word}>
-              <div className='flex items-start justify-between'>
-                <div>
-                  <h2 className='mb-2 text-lg font-semibold text-gray-700'>
-                    Posts with{' '}
-                    <span className='font-bold text-gray-700 italic'>"{word.toUpperCase()}"</span>
-                  </h2>
-                </div>
-                <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 text-2xl font-bold text-white'>
-                  {count}
-                </span>
-              </div>
-            </Card>
-          ))}
-        {}
-        <Button variant='primary' className='w-full' onClick={handleTriggerWordReset}>
-          Reset trigger words
+        <Button variant='primary' className='w-full' onClick={handleDataDownload}>
+          Download my data in JSON
+        </Button>
+        <Button variant='primary' className='w-full' onClick={handleReset}>
+          Reset
         </Button>
       </main>
     </div>
