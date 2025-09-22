@@ -20,7 +20,7 @@ function App() {
   // Invia solo il messaggio CHANGE_TRIGGERWORD con la nuova parola
   const handleSetTriggerWordAndReset = useCallback(() => {
     if (!newTriggerWord.trim()) return;
-    sendMessage('CHANGE_TRIGGERWORD', { triggerWord: newTriggerWord.trim() });
+    sendMessage('CHANGE_TRIGGERWORD', { newTriggerWord: newTriggerWord.trim() });
     setNewTriggerWord('');
   }, [newTriggerWord]);
 
@@ -92,8 +92,8 @@ function App() {
         <Card>
           <div className='flex items-start justify-between'>
             <div>
-              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk posts</h2>
-              <p className='mb-4 text-sm text-gray-500'>Total number of Musk posts</p>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk's posts</h2>
+              <p className='mb-4 text-sm text-gray-500'>Total number of Musk's posts</p>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
               {stats?.totalMuskPosts}
@@ -103,21 +103,8 @@ function App() {
         <Card>
           <div className='flex items-start justify-between'>
             <div>
-              <h2 className='mb-2 text-lg font-semibold text-gray-700'>
-                Posts with{' '}
-                <span className='font-bold text-gray-700 italic'>"{stats?.triggerWord}"</span>
-              </h2>
-              <p className='mb-4 text-sm text-gray-500'>Posts containing the trigger word</p>
-            </div>
-            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.totalTriggeredWordPosts}
-            </span>
-          </div>
-        </Card>
-        <Card>
-          <div className='flex items-start justify-between'>
-            <div>
               <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
+              <p className='mb-4 text-sm text-gray-500'>Exposure to unreliable domains</p>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
               {stats && stats.totalViews === 0 ? 'N.A.' : stats?.totalInfodemicRiskIndex.toFixed(2)}
@@ -130,6 +117,28 @@ function App() {
         <Button variant='secondary' className='w-full' onClick={handleReset}>
           Reset
         </Button>
+        <hr className='my-2 border-4 border-t border-indigo-800' />
+        <Card>
+          <div>
+            <h2 className='mb-2 text-lg font-semibold text-gray-700'>Trigger words statistics</h2>
+          </div>
+        </Card>
+        {stats &&
+          Object.entries(stats.triggerWordCounters).map(([word, count]) => (
+            <Card variant='secondary' key={word}>
+              <div className='flex items-start justify-between'>
+                <div>
+                  <h2 className='mb-2 text-lg font-semibold text-gray-700'>
+                    Posts with{' '}
+                    <span className='font-bold text-gray-700 italic'>"{word.toUpperCase()}"</span>
+                  </h2>
+                </div>
+                <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 text-2xl font-bold text-white'>
+                  {count}
+                </span>
+              </div>
+            </Card>
+          ))}
         {}
         <div className='mt-2 flex flex-col gap-2'>
           <Input
