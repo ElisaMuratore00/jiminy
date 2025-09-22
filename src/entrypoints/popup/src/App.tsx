@@ -16,6 +16,7 @@ function App() {
   // Callbacks
   const handleReset = useCallback(() => sendMessage('RESET'), []);
   const handleDataDownload = useCallback(() => sendMessage('DOWNLOAD_DATA'), []);
+  const handleTriggerWordReset = useCallback(() => sendMessage('RESET_TRIGGERWORD'), []);
 
   // Invia solo il messaggio CHANGE_TRIGGERWORD con la nuova parola
   const handleSetTriggerWordAndReset = useCallback(() => {
@@ -114,14 +115,36 @@ function App() {
         <Button variant='secondary' className='w-full' onClick={handleDataDownload}>
           Download my data in JSON
         </Button>
-        <Button variant='secondary' className='w-full' onClick={handleReset}>
+        <Button variant='primary' className='w-full' onClick={handleReset}>
           Reset
         </Button>
         <hr className='my-2 border-4 border-t border-indigo-800' />
         <Card>
           <div>
-            <h2 className='mb-2 text-lg font-semibold text-gray-700'>Trigger words statistics</h2>
+            <h2 className='mb-2 text-center text-lg font-semibold text-gray-700'>
+              Trigger words statistics
+            </h2>
           </div>
+          <div className='my-2' />
+          <p className='mb-4 text-center text-sm text-gray-500'>
+            Track how many posts contain your trigger words.{' '}
+          </p>
+          <Input
+            variant='secondary'
+            className='w-full'
+            type='text'
+            placeholder='Insert new trigger word'
+            value={newTriggerWord}
+            onInput={e => setNewTriggerWord((e.target as HTMLInputElement).value)}
+          />
+          <div className='my-2' />
+          <Button
+            variant='secondary'
+            className='w-full'
+            onClick={handleSetTriggerWordAndReset}
+            disabled={!newTriggerWord.trim()}>
+            Set a new trigger word
+          </Button>
         </Card>
         {stats &&
           Object.entries(stats.triggerWordCounters).map(([word, count]) => (
@@ -140,23 +163,9 @@ function App() {
             </Card>
           ))}
         {}
-        <div className='mt-2 flex flex-col gap-2'>
-          <Input
-            variant='primary'
-            className='w-full'
-            type='text'
-            placeholder='Insert new trigger word'
-            value={newTriggerWord}
-            onInput={e => setNewTriggerWord((e.target as HTMLInputElement).value)}
-          />
-          <Button
-            variant='primary'
-            className='w-full'
-            onClick={handleSetTriggerWordAndReset}
-            disabled={!newTriggerWord.trim()}>
-            Set a new trigger word
-          </Button>
-        </div>
+        <Button variant='primary' className='w-full' onClick={handleTriggerWordReset}>
+          Reset trigger words
+        </Button>
       </main>
     </div>
   );

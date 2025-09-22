@@ -7,6 +7,7 @@ interface ProtocolMap {
   RESET: () => void;
   DOWNLOAD_DATA: () => void;
   CHANGE_TRIGGERWORD: (data: NewTriggerWord) => void;
+  RESET_TRIGGERWORD: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

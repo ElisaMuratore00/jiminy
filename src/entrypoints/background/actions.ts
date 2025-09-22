@@ -117,3 +117,12 @@ export const updateTriggerWordCounter = (data: NewTriggerWord) =>
     stats.triggerWordCounters[newTriggerWord] = newTriggerWordCount;
     await statsPostsStorage.setValue(stats);
   });
+
+export const resetTriggerWordCounter = async () => {
+  //await statsPostsStorage.removeValue({ removeMeta: true });
+  const originalStats = await statsPostsStorage.getValue();
+  const newTriggeredWordCounters: Record<string, number> = {};
+
+  const stats: Stats = { ...originalStats, triggerWordCounters: newTriggeredWordCounters };
+  await statsPostsStorage.setValue(stats);
+};
