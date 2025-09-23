@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { title } from '../../../../package.json';
+import { description, title, version } from '../../../../package.json';
 import { Button } from '../../../components/button';
 import { Card } from '../../../components/card';
 import { Input } from '../../../components/input';
@@ -48,7 +48,7 @@ function App() {
   return (
     <div className='min-h-[250px] w-[400px] bg-gradient-to-br from-indigo-50 to-blue-100 p-5'>
       <header className='mb-6 rounded-xl border border-indigo-100 bg-white p-4 shadow-sm'>
-        <div className='flex items-center space-x-3'>
+        <div className='mb-4 flex items-center space-x-3'>
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -65,7 +65,9 @@ function App() {
             </svg>
           </div>
           <h1 className='text-2xl font-bold text-indigo-700'>{title}</h1>
+          <h1 className='text-2xl font-bold text-indigo-700'>{version}</h1>
         </div>
+        <h1 className='text-xs font-medium text-indigo-700'>{description}</h1>
       </header>
       <main className='flex flex-col gap-4'>
         <Card>
@@ -93,17 +95,6 @@ function App() {
         <Card>
           <div className='flex items-start justify-between'>
             <div>
-              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk's posts</h2>
-              <p className='mb-4 text-sm text-gray-500'>Total number of Musk's posts</p>
-            </div>
-            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.totalMuskPosts}
-            </span>
-          </div>
-        </Card>
-        <Card>
-          <div className='flex items-start justify-between'>
-            <div>
               <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
               <p className='mb-4 text-sm text-gray-500'>Exposure to unreliable domains</p>
             </div>
@@ -113,9 +104,20 @@ function App() {
           </div>
         </Card>
         <Card>
+          <div className='flex items-start justify-between'>
+            <div>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk's posts</h2>
+              <p className='mb-4 text-sm text-gray-500'>Total number of Musk's posts</p>
+            </div>
+            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
+              {stats?.totalMuskPosts}
+            </span>
+          </div>
+        </Card>
+        <Card>
           <div>
             <h2 className='mb-2 text-center text-lg font-semibold text-gray-700'>
-              Trigger words' statistics
+              Trigger words' counters
             </h2>
           </div>
           <div className='my-2' />
@@ -160,11 +162,24 @@ function App() {
           </Button>
         </Card>
         <Button variant='primary' className='w-full' onClick={handleDataDownload}>
-          Download my data in JSON
+          Download my data
         </Button>
         <Button variant='primary' className='w-full' onClick={handleReset}>
           Reset
         </Button>
+        <p className='mb-1 text-xs text-gray-500'>
+          <h2 className='text-2xs mb-1 font-bold text-gray-500'> Credits </h2>
+          Developed by Davide Pizzoli, Elisa Muratore, Veronica Organigo, Matteo Scianna, and Anna
+          Bertani
+        </p>
+        <p className='mb-1 text-xs text-gray-500'>
+          {' '}
+          <img
+            src='https://img.shields.io/badge/License-MIT-blue.svg'
+            alt='License: MIT'
+            style={{ height: 'auto', width: '60px' }}
+          />
+        </p>
       </main>
     </div>
   );
