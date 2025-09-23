@@ -4,6 +4,7 @@ const cardVariants = cva('rounded-2xl border p-6 shadow-md', {
   variants: {
     variant: {
       primary: 'border-indigo-100 bg-white',
+      secondary: 'border-gray-100 bg-indigo-100',
     },
   },
   defaultVariants: {
@@ -12,7 +13,7 @@ const cardVariants = cva('rounded-2xl border p-6 shadow-md', {
 });
 
 type CardProps = {
-  variant?: 'primary';
+  variant?: 'primary' | 'secondary';
   className?: string;
   children?: React.ReactNode;
 };

@@ -6,6 +6,7 @@ const buttonVariants = cva('flex-1 rounded-lg px-4 py-2 font-medium shadow trans
     variant: {
       primary: 'bg-indigo-500 text-white hover:bg-indigo-600 hover:shadow-md',
       secondary: 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+      third: 'bg-indigo-400 text-white hover:bg-indigo-600 hover:shadow-md',
     },
   },
   defaultVariants: {
@@ -18,7 +19,7 @@ export const Button = ({
   className,
   children,
   ...props
-}: ButtonHTMLAttributes & { variant?: 'primary' | 'secondary' }) => (
+}: ButtonHTMLAttributes & { variant?: 'primary' | 'secondary' | 'third' }) => (
   <button className={buttonVariants({ variant, className })} {...props}>
     {children}
   </button>

@@ -16,11 +16,12 @@ function App() {
   // Callbacks
   const handleReset = useCallback(() => sendMessage('RESET'), []);
   const handleDataDownload = useCallback(() => sendMessage('DOWNLOAD_DATA'), []);
+  const handleTriggerWordReset = useCallback(() => sendMessage('RESET_TRIGGERWORD'), []);
 
   // Invia solo il messaggio CHANGE_TRIGGERWORD con la nuova parola
   const handleSetTriggerWordAndReset = useCallback(() => {
     if (!newTriggerWord.trim()) return;
-    sendMessage('CHANGE_TRIGGERWORD', { triggerWord: newTriggerWord.trim() });
+    sendMessage('CHANGE_TRIGGERWORD', { newTriggerWord: newTriggerWord.trim() });
     setNewTriggerWord('');
   }, [newTriggerWord]);
 
@@ -92,8 +93,8 @@ function App() {
         <Card>
           <div className='flex items-start justify-between'>
             <div>
-              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk posts</h2>
-              <p className='mb-4 text-sm text-gray-500'>Total number of Musk posts</p>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk's posts</h2>
+              <p className='mb-4 text-sm text-gray-500'>Total number of Musk's posts</p>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
               {stats?.totalMuskPosts}
@@ -103,51 +104,67 @@ function App() {
         <Card>
           <div className='flex items-start justify-between'>
             <div>
-              <h2 className='mb-2 text-lg font-semibold text-gray-700'>
-                Posts with{' '}
-                <span className='font-bold text-gray-700 italic'>"{stats?.triggerWord}"</span>
-              </h2>
-              <p className='mb-4 text-sm text-gray-500'>Posts containing the trigger word</p>
-            </div>
-            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.totalTriggeredWordPosts}
-            </span>
-          </div>
-        </Card>
-        <Card>
-          <div className='flex items-start justify-between'>
-            <div>
               <h2 className='mb-2 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
+              <p className='mb-4 text-sm text-gray-500'>Exposure to unreliable domains</p>
             </div>
             <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
               {stats && stats.totalViews === 0 ? 'N.A.' : stats?.totalInfodemicRiskIndex.toFixed(2)}
             </span>
           </div>
         </Card>
-        <Button variant='secondary' className='w-full' onClick={handleDataDownload}>
-          Download my data in JSON
-        </Button>
-        <Button variant='secondary' className='w-full' onClick={handleReset}>
-          Reset
-        </Button>
-        {}
-        <div className='mt-2 flex flex-col gap-2'>
+        <Card>
+          <div>
+            <h2 className='mb-2 text-center text-lg font-semibold text-gray-700'>
+              Trigger words' statistics
+            </h2>
+          </div>
+          <div className='my-2' />
+          <p className='mb-6 text-center text-sm text-gray-500'>
+            Track posts containing your trigger words{' '}
+          </p>
+          {stats &&
+            Object.entries(stats.triggerWordCounters).map(([word, count]) => (
+              <div key={word} className='flex items-start justify-between'>
+                <div>
+                  <h2 className='mb-4 text-lg font-medium text-gray-700'>
+                    {' '}
+                    <span className='font-medium text-gray-700'>"{word.toUpperCase()}"</span>
+                  </h2>
+                </div>
+                <span className='flex h-8 w-8 items-center justify-center rounded-full bg-indigo-800 font-bold text-white'>
+                  {count}
+                </span>
+              </div>
+            ))}
+          <div className='my-4' />
+          {}
           <Input
-            variant='primary'
+            variant='secondary'
             className='w-full'
             type='text'
-            placeholder='Insert new trigger word'
+            placeholder='Insert a new trigger word'
             value={newTriggerWord}
             onInput={e => setNewTriggerWord((e.target as HTMLInputElement).value)}
           />
+          <div className='my-2' />
           <Button
-            variant='primary'
+            variant='secondary'
             className='w-full'
             onClick={handleSetTriggerWordAndReset}
             disabled={!newTriggerWord.trim()}>
-            Set a new trigger word
+            Add the inserted trigger word
           </Button>
-        </div>
+          <div className='my-2' />
+          <Button variant='third' className='w-full' onClick={handleTriggerWordReset}>
+            Delete all trigger words
+          </Button>
+        </Card>
+        <Button variant='primary' className='w-full' onClick={handleDataDownload}>
+          Download my data in JSON
+        </Button>
+        <Button variant='primary' className='w-full' onClick={handleReset}>
+          Reset
+        </Button>
       </main>
     </div>
   );

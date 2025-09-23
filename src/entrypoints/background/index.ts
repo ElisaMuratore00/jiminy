@@ -1,7 +1,13 @@
+import { TRIGGER_WORDS_DEFAULT } from '../../config/constants';
 import logger from '../../utils/logger';
 import { onMessage, sendMessage } from '../../utils/messaging';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
-import { downloadData, saveNewViewedPost, updateTriggerWordCounter } from './actions';
+import {
+  downloadData,
+  saveNewViewedPost,
+  setTriggerWordCounterToValue,
+  updateTriggerWordCounter,
+} from './actions';
 import { browser, defineBackground } from '#imports';
 
 export default defineBackground(() => {
@@ -28,5 +34,16 @@ export default defineBackground(() => {
 
   onMessage('CHANGE_TRIGGERWORD', async ({ data }) => {
     await updateTriggerWordCounter(data);
+  });
+
+  onMessage('RESET_TRIGGERWORD', async () => {
+    const newTriggeredWordCounters = TRIGGER_WORDS_DEFAULT;
+    setTriggerWordCounterToValue(newTriggeredWordCounters);
+
+    browser.tabs.query({}).then(tabs => {
+      // Send reset message to all tabs
+      for (const tab of tabs)
+        if (tab.id !== undefined) sendMessage('RESET_TRIGGERWORD', undefined, { tabId: tab.id });
+    });
   });
 });
