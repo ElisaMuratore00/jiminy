@@ -1,3 +1,4 @@
+import { TRIGGER_WORDS_DEFAULT } from '../config/constants';
 import type { Post, Stats } from '../types/entities';
 import { storage } from '#imports';
 
@@ -12,6 +13,6 @@ export const statsPostsStorage = storage.defineItem<Stats>('local:statsPosts', {
     totalMuskPosts: 0,
     totalInfodemicRiskIndex: 0,
     totalViews: 0,
-    triggerWordCounters: { gaza: 0, elon: 0 },
+    triggerWordCounters: TRIGGER_WORDS_DEFAULT,
   },
 });

@@ -1,10 +1,11 @@
+import { TRIGGER_WORDS_DEFAULT } from '../../config/constants';
 import logger from '../../utils/logger';
 import { onMessage, sendMessage } from '../../utils/messaging';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
 import {
   downloadData,
-  resetTriggerWordCounter,
   saveNewViewedPost,
+  setTriggerWordCounterToValue,
   updateTriggerWordCounter,
 } from './actions';
 import { browser, defineBackground } from '#imports';
@@ -36,7 +37,8 @@ export default defineBackground(() => {
   });
 
   onMessage('RESET_TRIGGERWORD', async () => {
-    resetTriggerWordCounter();
+    const newTriggeredWordCounters = TRIGGER_WORDS_DEFAULT;
+    setTriggerWordCounterToValue(newTriggeredWordCounters);
 
     browser.tabs.query({}).then(tabs => {
       // Send reset message to all tabs

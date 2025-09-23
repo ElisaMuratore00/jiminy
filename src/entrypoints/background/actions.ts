@@ -1,5 +1,5 @@
 import { Mutex } from 'async-mutex';
-import type { NewTriggerWord, Post, Stats } from '../../types/entities';
+import type { NewTriggerWord, Post, Stats, TriggerCounts } from '../../types/entities';
 import logger from '../../utils/logger';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
 import { containsTriggerWordInPostType, isMuskPost, urlReliability } from '../../utils/utils';
@@ -73,7 +73,7 @@ export const updateStats = (data: Post) =>
     // update `trigger word` posts counter
     for (const triggerWord of Object.keys(originalStats.triggerWordCounters)) {
       if (containsTriggerWordInPostType(data, triggerWord)) {
-        stats.triggerWordCounters[triggerWord] += 1;
+        stats.triggerWordCounters[triggerWord] = originalStats.triggerWordCounters[triggerWord] + 1;
       }
     }
 
@@ -118,10 +118,8 @@ export const updateTriggerWordCounter = (data: NewTriggerWord) =>
     await statsPostsStorage.setValue(stats);
   });
 
-export const resetTriggerWordCounter = async () => {
+export const setTriggerWordCounterToValue = async (newTriggerCounts: TriggerCounts) => {
   const originalStats = await statsPostsStorage.getValue();
-  const newTriggeredWordCounters: Record<string, number> = {};
-
-  const stats: Stats = { ...originalStats, triggerWordCounters: newTriggeredWordCounters };
+  const stats: Stats = { ...originalStats, triggerWordCounters: newTriggerCounts };
   await statsPostsStorage.setValue(stats);
 };
