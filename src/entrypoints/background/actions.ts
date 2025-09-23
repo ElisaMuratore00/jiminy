@@ -2,7 +2,7 @@ import { Mutex } from 'async-mutex';
 import type { NewTriggerWord, Post, Stats } from '../../types/entities';
 import logger from '../../utils/logger';
 import { statsPostsStorage, viewedPostsStorage } from '../../utils/storage';
-import { containsTriggerWord, isMuskPost, urlReliability } from '../../utils/utils';
+import { containsTriggerWordInPostType, isMuskPost, urlReliability } from '../../utils/utils';
 import { browser } from '#imports';
 
 const saveViewedPostMutex = new Mutex();
@@ -72,7 +72,7 @@ export const updateStats = (data: Post) =>
 
     // update `trigger word` posts counter
     for (const triggerWord of Object.keys(originalStats.triggerWordCounters)) {
-      if (containsTriggerWord(data.text, triggerWord)) {
+      if (containsTriggerWordInPostType(data, triggerWord)) {
         stats.triggerWordCounters[triggerWord] += 1;
       }
     }
@@ -110,7 +110,7 @@ export const updateTriggerWordCounter = (data: NewTriggerWord) =>
     // Set new trigger word in statsPostsStorage
     const newTriggerWord: string = data.newTriggerWord.trim().toLowerCase();
     const newTriggerWordCount: number = viewedPosts.filter(post =>
-      containsTriggerWord(post.text, newTriggerWord),
+      containsTriggerWordInPostType(post, newTriggerWord),
     ).length;
 
     // Update stats
@@ -119,7 +119,6 @@ export const updateTriggerWordCounter = (data: NewTriggerWord) =>
   });
 
 export const resetTriggerWordCounter = async () => {
-  //await statsPostsStorage.removeValue({ removeMeta: true });
   const originalStats = await statsPostsStorage.getValue();
   const newTriggeredWordCounters: Record<string, number> = {};
 

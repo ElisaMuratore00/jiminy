@@ -124,7 +124,7 @@ function App() {
           </p>
           {stats &&
             Object.entries(stats.triggerWordCounters).map(([word, count]) => (
-              <div className='flex items-start justify-between'>
+              <div key={word} className='flex items-start justify-between'>
                 <div>
                   <h2 className='mb-4 text-lg font-medium text-gray-700'>
                     {' '}
