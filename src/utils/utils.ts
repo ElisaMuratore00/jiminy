@@ -35,11 +35,6 @@ export const urlReliability = (url: string): number | undefined => {
   return reliabilityList[hostname as keyof typeof reliabilityList];
 };
 
-export const containsTriggerWord = (
-  text: Post['text'],
-  triggerWord: keyof TriggerCounts,
-): boolean => text.toLowerCase().includes(triggerWord.toLowerCase());
-
 export const containsTriggerWordInPostType = (
   data: Post,
   triggerWord: keyof TriggerCounts,
