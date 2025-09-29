@@ -169,8 +169,8 @@ function App() {
         <div>
           <h6 className='text-2xs font-bold text-gray-500'>Credits</h6>
           <p className='text-xs text-gray-500'>
-            Developed by Davide Pizzoli, Elisa Muratore, Veronica Organigo, Matteo Scianna and Anna
-            Bertani
+            Developed by Davide Pizzoli, Elisa Muratore, Veronica Orsanigo, Matteo Scianna, Anna
+            Bertani and Riccardo Gallotti.
           </p>
           <img
             src='https://img.shields.io/badge/License-MIT-blue.svg'
