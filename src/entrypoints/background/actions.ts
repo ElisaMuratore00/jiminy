@@ -7,7 +7,6 @@ import { browser } from '#imports';
 
 const saveViewedPostMutex = new Mutex();
 const updateStatsMutex = new Mutex();
-const updateTriggerWord = new Mutex();
 
 /**
  * Save viewed post if new
@@ -103,13 +102,13 @@ export const downloadData = async () => {
 };
 
 export const updateTriggerWordCounter = (data: NewTriggerWord) =>
-  updateTriggerWord.runExclusive(async () => {
+  updateStatsMutex.runExclusive(async () => {
     const stats = await statsPostsStorage.getValue();
     const viewedPosts = await viewedPostsStorage.getValue();
 
     // Set new trigger word in statsPostsStorage
-    const newTriggerWord: string = data.newTriggerWord.trim().toLowerCase();
-    const newTriggerWordCount: number = viewedPosts.filter(post =>
+    const newTriggerWord = data.newTriggerWord.trim().toLowerCase();
+    const newTriggerWordCount = viewedPosts.filter(post =>
       containsTriggerWordInPostType(post, newTriggerWord),
     ).length;
 
@@ -118,8 +117,14 @@ export const updateTriggerWordCounter = (data: NewTriggerWord) =>
     await statsPostsStorage.setValue(stats);
   });
 
-export const setTriggerWordCounterToValue = async (newTriggerCounts: TriggerCounts) => {
-  const originalStats = await statsPostsStorage.getValue();
-  const stats: Stats = { ...originalStats, triggerWordCounters: newTriggerCounts };
-  await statsPostsStorage.setValue(stats);
-};
+export const setTriggerWordCounterToValue = async (newTriggerCounts: TriggerCounts) =>
+  updateStatsMutex.runExclusive(async () => {
+    const originalStats = await statsPostsStorage.getValue();
+
+    const stats: Stats = {
+      ...originalStats,
+      triggerWordCounters: newTriggerCounts,
+    };
+
+    await statsPostsStorage.setValue(stats);
+  });

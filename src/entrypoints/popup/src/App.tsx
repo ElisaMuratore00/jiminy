@@ -16,7 +16,7 @@ function App() {
   // Callbacks
   const handleReset = useCallback(() => sendMessage('RESET'), []);
   const handleDataDownload = useCallback(() => sendMessage('DOWNLOAD_DATA'), []);
-  const handleTriggerWordReset = useCallback(() => sendMessage('RESET_TRIGGERWORD'), []);
+  const handleDeleteAllTriggerWord = useCallback(() => sendMessage('DELETE_TRIGGERWORD'), []);
 
   // Invia solo il messaggio CHANGE_TRIGGERWORD con la nuova parola
   const handleSetTriggerWordAndReset = useCallback(() => {
@@ -139,7 +139,6 @@ function App() {
               </div>
             ))}
           <div className='my-4' />
-          {}
           <Input
             variant='secondary'
             className='w-full'
@@ -150,36 +149,36 @@ function App() {
           />
           <div className='my-2' />
           <Button
-            variant='secondary'
+            variant='primary'
             className='w-full'
             onClick={handleSetTriggerWordAndReset}
             disabled={!newTriggerWord.trim()}>
             Add the inserted trigger word
           </Button>
           <div className='my-2' />
-          <Button variant='third' className='w-full' onClick={handleTriggerWordReset}>
+          <Button variant='danger' className='w-full' onClick={handleDeleteAllTriggerWord}>
             Delete all trigger words
           </Button>
         </Card>
-        <Button variant='primary' className='w-full' onClick={handleDataDownload}>
+        <Button variant='secondary' className='w-full' onClick={handleDataDownload}>
           Download my data
         </Button>
-        <Button variant='primary' className='w-full' onClick={handleReset}>
+        <Button variant='danger' className='w-full' onClick={handleReset}>
           Reset
         </Button>
-        <p className='mb-1 text-xs text-gray-500'>
-          <h2 className='text-2xs mb-1 font-bold text-gray-500'> Credits </h2>
-          Developed by Davide Pizzoli, Elisa Muratore, Veronica Organigo, Matteo Scianna, and Anna
-          Bertani
-        </p>
-        <p className='mb-1 text-xs text-gray-500'>
-          {' '}
+        <div>
+          <h6 className='text-2xs font-bold text-gray-500'>Credits</h6>
+          <p className='text-xs text-gray-500'>
+            Developed by Davide Pizzoli, Elisa Muratore, Veronica Organigo, Matteo Scianna and Anna
+            Bertani
+          </p>
           <img
             src='https://img.shields.io/badge/License-MIT-blue.svg'
             alt='License: MIT'
+            className='mt-2'
             style={{ height: 'auto', width: '60px' }}
           />
-        </p>
+        </div>
       </main>
     </div>
   );
