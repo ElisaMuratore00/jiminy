@@ -63,6 +63,12 @@ export const updateStats = (data: Post) =>
         stats.totalViews += views;
         // update `IRI`
         stats.totalInfodemicRiskIndex = numerator / stats.totalViews;
+        // update reliable/unreliable counters
+        if (reliabilityAverage < 1.0) {
+          stats.totalUnreliablePosts += 1;
+        } else {
+          stats.totalReliablePosts += 1;
+        }
       }
     }
 
