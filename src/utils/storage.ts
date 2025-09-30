@@ -13,6 +13,8 @@ export const statsPostsStorage = storage.defineItem<Stats>('local:statsPosts', {
     totalMuskPosts: 0,
     totalInfodemicRiskIndex: 0,
     totalViews: 0,
+    totalReliablePosts: 0,
+    totalUnreliablePosts: 0,
     triggerWordCounters: TRIGGER_WORDS_DEFAULT,
   },
 });

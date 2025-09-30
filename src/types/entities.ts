@@ -31,6 +31,8 @@ export type Stats = {
   totalMuskPosts: number;
   totalInfodemicRiskIndex: number;
   totalViews: number;
+  totalReliablePosts: number;
+  totalUnreliablePosts: number;
   triggerWordCounters: TriggerCounts;
 };
 
