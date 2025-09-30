@@ -93,6 +93,17 @@ function App() {
           </div>
         </Card>
         <Card>
+          <div className='flex items-start justify-between'>
+            <div>
+              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk's posts</h2>
+              <p className='mb-4 text-sm text-gray-500'>Total number of Musk's posts</p>
+            </div>
+            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
+              {stats?.totalMuskPosts}
+            </span>
+          </div>
+        </Card>
+        <Card>
           <div className='mb-2 flex items-start justify-between'>
             <div>
               <h2 className='mb-1 text-lg font-semibold text-gray-700'>Infodemic risk index</h2>
@@ -102,31 +113,20 @@ function App() {
               {stats && stats.totalViews === 0 ? 'N.A.' : stats?.totalInfodemicRiskIndex.toFixed(2)}
             </span>
           </div>
-          <div className='flex items-start gap-7'>
+          <div className='flex items-start gap-5'>
             <div>
-              <h2 className='mb-3 text-lg font-medium text-gray-700'> Unreliable posts:</h2>
+              <h2 className='mb-3 ml-6 text-lg font-semibold text-gray-700'>• Unreliable URLs:</h2>
             </div>
             <span className='flex h-8 w-8 items-center justify-center rounded-full bg-indigo-800 font-bold text-white'>
               {stats?.totalUnreliablePosts}
             </span>
           </div>
-          <div className='flex items-start gap-12'>
+          <div className='flex items-start gap-10'>
             <div>
-              <h2 className='mb-4 text-lg font-medium text-gray-700'> Reliable posts:</h2>
+              <h2 className='mb-3 ml-6 text-lg font-semibold text-gray-700'>• Reliable URLs:</h2>
             </div>
             <span className='flex h-8 w-8 items-center justify-center rounded-full bg-indigo-800 font-bold text-white'>
               {stats?.totalReliablePosts}
-            </span>
-          </div>
-        </Card>
-        <Card>
-          <div className='flex items-start justify-between'>
-            <div>
-              <h2 className='mb-2 text-lg font-semibold text-gray-700'>Musk's posts</h2>
-              <p className='mb-4 text-sm text-gray-500'>Total number of Musk's posts</p>
-            </div>
-            <span className='flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-800'>
-              {stats?.totalMuskPosts}
             </span>
           </div>
         </Card>
